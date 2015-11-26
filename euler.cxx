@@ -9,15 +9,21 @@ using namespace std;
 void calcanalytical(double* e, const int N, const double tstep, const double lambda);
 void calceulerfor(double* e, const int N, const double tstep, const double lambda);
 void calceulerback(double* e, const int N, const double tstep, const double lambda);
+void calcmiddle(double* e, const int N, const double tstep, const double lambda);
 void printresult(double* e, const int N, const string outputname, const double tstep);
 
 // main function
 int main() {
 	// define needed variables
-	const double lambda = -2;
-	const int N = 1000; // Number of steps
+	const double lambda = -0.5;
+	int N = 10; // Number of steps
+	cout << "Enter the number of interation steps: " << endl;
+	cin >> N;
 	const double tmax = 5 * (log(0.5) / lambda); // calc max t -> t_hl
 	const double tstep = tmax / N;
+	
+	cout << "The product tstep * lambda is " << tstep * lambda << endl;
+	
 	double e[N+1];
 	e[0] = 0.0;
 	e[0] = 1.0;
@@ -29,6 +35,8 @@ int main() {
 	printresult(e, N, "eulerfor.txt", tstep);
 	calceulerback(e, N, tstep, lambda);
 	printresult(e, N, "eulerback.txt", tstep);
+	calcmiddle(e, N, tstep, lambda);
+	printresult(e, N, "middle.txt", tstep);
 	
 	
 	return 0;
@@ -55,6 +63,13 @@ void calceulerback(double* e, const int N, const double tstep, const double lamb
 	for (int i = 1; i <= N; i++) {
 		e[i] =e[i-1] / (1 - tstep * lambda);
 	}	
+}
+
+ void calcmiddle(double* e, const int N, const double tstep, const double lambda) {
+	 for (int i = 1; i <= N; i++) {
+		 e[i] = ((1+ 0.5 * tstep * lambda)/(1- 0.5 * tstep * lambda)) * e[i-1];
+	 }
+	
 }
 
 void printresult(double* e, const int N, const string outputname, const double tstep) {
